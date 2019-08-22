@@ -30,30 +30,21 @@ const GreetingType = new GraphQLObjectType({
   fields: () => ({
     phrase: {
       type: GraphQLString,
-      args: {
-        phrase: { type: GraphQLString }
-      },
-      resolve: (source, args, context) => {
-        return greetings[args.phrase].language['en'];
+      // source object is passed from the entry point Query 
+      resolve: (source) => {
+        return source.phrase;
       }
     },
     language: {
       type: GraphQLString,
-      args: {
-        lang: { type: GraphQLString }
-      },
-      resolve: (source, args) => {
-        return args.lang;
+      resolve: (source) => {
+        return source.lang;
       }
     },
     translation: {
       type: GraphQLString,
-      args: {
-        phrase: { type: GraphQLString },
-        lang: { type: GraphQLString }
-      },
-      resolve: (source, args) => {
-        return greetings[args.phrase].language[args.lang];
+      resolve: (source) => {
+        return greetings[source.phrase].language[source.lang];
       }
     }
   })
@@ -67,7 +58,14 @@ module.exports = new GraphQLSchema({
     fields: () => ({
       greeting: {
         type: GreetingType,
-        resolve: () => "zzzz"
+        args: {
+          phrase: { type: GraphQLString },
+          lang: { type: GraphQLString }
+        },
+        resolve: (source, args) => ({
+          phrase: args.phrase, 
+          lang: args.lang
+        })
       },
     })
   })
