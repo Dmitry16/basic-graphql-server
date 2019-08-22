@@ -6,20 +6,50 @@ const {
   GraphQLList
 } = require('graphql');
 
+const greetings = {
+  hello: {
+    language: {
+      en: 'hello',
+      sp: 'hola',
+      ua: 'привіт'
+    }
+  },
+  hey: {
+    language: {
+      en: 'hey',
+      sp: 'ey',
+      ua: 'йоу'
+    }
+  }
+};
+
+const GreetingType = new GraphQLObjectType({
+  name: 'Greeting',
+  description: 'greeting',
+
+  fields: () => ({
+    phrase: {
+      type: GraphQLString,
+      args: {
+        phrase: { type: GraphQLString }
+      },
+      resolve: (source, args) => {
+        return greetings[args.phrase].language['en'];
+      }
+    }
+  })
+});
+
 module.exports = new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'Query',
-    description: 'blablabla',
+    description: 'the entry point',
 
     fields: () => ({
-      hello: {
-        type: GraphQLString,
-        resolve: () => 'Hello Worldzzz!'
+      greeting: {
+        type: GreetingType,
+        resolve: () => "zzzz"
       },
-      blabla: {
-        type: GraphQLString,
-        resolve: () => 'blablablabla!!!'
-      }
     })
   })
 });
