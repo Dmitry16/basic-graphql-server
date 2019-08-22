@@ -33,8 +33,27 @@ const GreetingType = new GraphQLObjectType({
       args: {
         phrase: { type: GraphQLString }
       },
-      resolve: (source, args) => {
+      resolve: (source, args, context) => {
         return greetings[args.phrase].language['en'];
+      }
+    },
+    language: {
+      type: GraphQLString,
+      args: {
+        lang: { type: GraphQLString }
+      },
+      resolve: (source, args) => {
+        return args.lang;
+      }
+    },
+    translation: {
+      type: GraphQLString,
+      args: {
+        phrase: { type: GraphQLString },
+        lang: { type: GraphQLString }
+      },
+      resolve: (source, args) => {
+        return greetings[args.phrase].language[args.lang];
       }
     }
   })
